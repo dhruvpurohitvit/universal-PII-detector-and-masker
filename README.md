@@ -49,20 +49,20 @@ Most commercial and open-source PII tools have one or more of these weaknesses:
 
 | Limitation | This Tool |
 |---|---|
-| Rely on column names to decide what to scan | ❌ We scan the values first; column names only add a confidence boost |
-| Can't handle typos in column names | ✅ Fuzzy column name matching via `difflib` (edit-distance ≤ 2) |
-| Single engine = single point of failure | ✅ Three independent engines vote and their evidence is fused |
-| No checksums → many false positives | ✅ Luhn (CC), Verhoeff (Aadhaar), MOD-97 (IBAN), NHS checksum, etc. |
-| Binary yes/no output | ✅ Probabilistic weighted evidence score with decision margin |
-| Slow / no batch processing | ✅ LRU cache for repeated values; stratified GLiNER sampling |
-| No encryption / masking | ✅ AES-256-GCM with PBKDF2-SHA256 key derivation (OWASP 2024) |
-| No explainability | ✅ Per-column reason string explaining every decision |
+| Rely on column names to decide what to scan | (X) We scan the values first; column names only add a confidence boost |
+| Can't handle typos in column names | (✔) Fuzzy column name matching via `difflib` (edit-distance ≤ 2) |
+| Single engine = single point of failure | (✔) Three independent engines vote and their evidence is fused |
+| No checksums → many false positives | (✔) Luhn (CC), Verhoeff (Aadhaar), MOD-97 (IBAN), NHS checksum, etc. |
+| Binary yes/no output | (✔) Probabilistic weighted evidence score with decision margin |
+| Slow / no batch processing | (✔) LRU cache for repeated values; stratified GLiNER sampling |
+| No encryption / masking | (✔) AES-256-GCM with PBKDF2-SHA256 key derivation (OWASP 2024) |
+| No explainability | (✔) Per-column reason string explaining every decision |
 
 The core innovation is the **three-engine evidence fusion layer** (`aggregator.py`), which combines NLP confidence, regex specificity, GLiNER zero-shot inference, checksum validation, and column semantic scores into a single calibrated confidence number — with entity-specific thresholds and collision-group penalty logic.
 
 ---
 
-## 🧑‍💻 User Workflow
+##  User Workflow
 
 ### Using the Streamlit Web UI
 
@@ -70,7 +70,7 @@ The core innovation is the **three-engine evidence fusion layer** (`aggregator.p
 1. Run:   python -m streamlit run app.py
 2. Open:  http://localhost:8501
 3. Upload your CSV file (drag and drop)
-4. Click "🚀 Start PII Scan"
+4. Click " Start PII Scan"
 5. Watch the live progress log as each column is scanned
 6. Navigate the five result tabs:
    -  Summary   → Visual grid of all columns with PII/Safe status
