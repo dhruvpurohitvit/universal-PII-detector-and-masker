@@ -1,4 +1,4 @@
-# 🛡️ Enterprise PII Detector
+#  Enterprise PII Detector
 
 > **Industry-grade, zero-shot, multi-engine Personally Identifiable Information (PII) detection and masking engine for any tabular CSV dataset.**
 
@@ -10,7 +10,7 @@
 
 ---
 
-## 📖 Table of Contents
+## Table of Contents
 
 1. [What Is This?](#-what-is-this)
 2. [Why Is This Novel?](#-why-is-this-novel)
@@ -28,7 +28,7 @@
 
 ---
 
-## 🔍 What Is This?
+## What Is This?
 
 Most PII detectors require you to tell them **which column contains sensitive data**. This tool does the opposite — it figures that out entirely on its own.
 
@@ -43,7 +43,7 @@ It works **even when the column name is wrong, has a typo, or is completely unre
 
 ---
 
-## 💡 Why Is This Novel?
+## Why Is This Novel?
 
 Most commercial and open-source PII tools have one or more of these weaknesses:
 
@@ -73,11 +73,11 @@ The core innovation is the **three-engine evidence fusion layer** (`aggregator.p
 4. Click "🚀 Start PII Scan"
 5. Watch the live progress log as each column is scanned
 6. Navigate the five result tabs:
-   - 📊 Summary   → Visual grid of all columns with PII/Safe status
-   - 🗂️ Detailed  → Full table with scores, validators, and reasons
-   - ⏱️ Timing    → Stacked bar chart of per-module runtimes
-   - 🔒 Mask PII  → Encrypt PII columns + download masked CSV + key file
-   - 🔓 Unmask    → Upload masked CSV + key file + password to restore
+   -  Summary   → Visual grid of all columns with PII/Safe status
+   -  Detailed  → Full table with scores, validators, and reasons
+   -  Timing    → Stacked bar chart of per-module runtimes
+   -  Mask PII  → Encrypt PII columns + download masked CSV + key file
+   -  Unmask    → Upload masked CSV + key file + password to restore
 ```
 
 ### Using the Command Line (CLI)
@@ -95,17 +95,17 @@ python main.py --input your_data.csv --output-dir outputs/ --max-samples 40
 
 ---
 
-## ⚙️ How the Engine Works (Step-by-Step)
+##  How the Engine Works (Step-by-Step)
 
 Here is exactly what happens when you scan one column of your CSV file:
 
 ### Step 1 — Normalise & Deduplicate
 Every value in the column is Unicode-normalised, whitespace-stripped, and deduplicated. Only unique non-null values are sent to the detection engines. This means scanning a 1,000,000-row file with only 500 unique emails costs the same as scanning 500 rows.
 
-### Step 2 — Stage 1: Presidio NLP Scan 🔍
+### Step 2 — Stage 1: Presidio NLP Scan 
 Microsoft Presidio runs spaCy's large English NER model (`en_core_web_lg`) on every unique value. It recognises entities like `PERSON`, `PHONE_NUMBER`, `EMAIL_ADDRESS`, `CREDIT_CARD`, etc. Results are **cached** in an LRU cache (up to 80,000 entries) so repeated values across columns cost nothing extra.
 
-### Step 3 — Stage 1: Regex Pattern Scan 🔎
+### Step 3 — Stage 1: Regex Pattern Scan 
 Forty-plus hand-crafted regular expressions run on every unique value in parallel with Presidio. Patterns cover:
 - Structured IDs: Aadhaar, PAN, SSN, IBAN, IFSC, NHS Number, NI Number, ITIN
 - Financial: Credit card (BIN-aware), Bank account numbers
@@ -117,7 +117,7 @@ Forty-plus hand-crafted regular expressions run on every unique value in paralle
 
 Each pattern has a **reliability weight** (0.28–0.99) and a **specificity class** (STRICT / MODERATE / BROAD) that feeds the fusion layer.
 
-### Step 4 — Deterministic Validation ✅
+### Step 4 — Deterministic Validation 
 For every candidate entity, a hard validator runs on the matched value:
 - **Credit Card** → Luhn algorithm
 - **Aadhaar** → Verhoeff checksum (12-digit, first digit 2–9)
@@ -131,7 +131,7 @@ For every candidate entity, a hard validator runs on the matched value:
 
 Validator pass/fail is fed into the fusion score — a column where every credit card number passes Luhn gets a major confidence boost; one where none pass is penalised.
 
-### Step 5 — GLiNER Zero-Shot AI 🤖
+### Step 5 — GLiNER Zero-Shot AI 
 GLiNER (`urchade/gliner_multi_pii-v1`) is a transformer-based named entity recogniser that works without any fine-tuning on domain-specific labels. It runs in **two views**:
 - **Value view**: just the raw cell value
 - **Context view**: `"Field 'email_contact' (email address) value: john@corp.com"`
@@ -140,7 +140,7 @@ The context view lets GLiNER use column-name semantics even when the pattern did
 
 GLiNER does **not** run on every value — it runs on a **stratified sample** of up to 20 values per column, chosen to maximise entity-family coverage. This keeps inference time practical while maintaining accuracy.
 
-### Step 6 — Evidence Fusion & Scoring ⚖️
+### Step 6 — Evidence Fusion & Scoring 
 The aggregator (`aggregator.py`) fuses all evidence from all three engines into a single **Evidence Score** per entity per column:
 
 ```
@@ -160,7 +160,7 @@ Evidence Score = weighted combination of:
 
 Entity-specific weights and formulas are used — e.g. `Person Name` is mostly NLP-driven, while `Credit Card` is mostly regex + checksum driven.
 
-### Step 7 — Policy Layer & Decision 🏛️
+### Step 7 — Policy Layer & Decision 
 The final decision is made using entity-specific thresholds (0.56–0.68) and a configurable privacy policy:
 - `PROTECT` → PII confirmed, column should be masked
 - `DETECTED_EXCLUDED` → PII found, but policy says it's not reportable (e.g. Organization name)
@@ -168,7 +168,7 @@ The final decision is made using entity-specific thresholds (0.56–0.68) and a 
 
 ---
 
-## 🔄 Backend Detection Pipeline (Flowchart)
+##  Backend Detection Pipeline (Flowchart)
 
 ```
 CSV File
@@ -224,7 +224,7 @@ CSV File
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 pii/
@@ -264,7 +264,7 @@ pii/
 
 ---
 
-## 📄 What Each File Does
+##  What Each File Does
 
 | File | Purpose |
 |------|---------|
@@ -282,7 +282,7 @@ pii/
 
 ---
 
-## 🔒 AES-256-GCM Masking — How It Works
+##  AES-256-GCM Masking — How It Works
 
 ### Encryption
 
@@ -312,7 +312,7 @@ Upload both `masked_data.csv` and `manifest.json` in the Unmask tab, enter your 
 
 ---
 
-## 📊 Output Files
+## Output Files
 
 | File | Description |
 |------|-------------|
@@ -336,7 +336,7 @@ Note how `emial` (typo) and `ph_no` (abbreviated) are correctly identified — b
 
 ---
 
-## 🚀 Installation
+##  Installation
 
 ### Requirements
 - Python 3.9 or higher
@@ -367,7 +367,7 @@ python -m spacy download en_core_web_lg
 
 ---
 
-## ▶️ Running the App
+##  Running the App
 
 ### Web UI (Recommended)
 ```bash
@@ -389,7 +389,7 @@ python main.py --input your_data.csv --output-dir outputs/ --max-samples 40
 
 ---
 
-## ⚙️ Configuration
+##  Configuration
 
 Edit `pii_detector/config/settings.py` to tune the engine. Key settings:
 
@@ -405,7 +405,7 @@ Edit `pii_detector/config/settings.py` to tune the engine. Key settings:
 
 ---
 
-## 🧩 Supported PII Types
+##  Supported PII Types
 
 | Category | Entities |
 |----------|----------|
