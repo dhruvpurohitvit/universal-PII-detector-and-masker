@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Virtual environments
+gliner_env/
+venv/
+env/
+.venv/
+
+# Streamlit
+.streamlit/
+
+# Outputs
+outputs/
+*.csv
+!testx2.csv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Models / HuggingFace cache
+.cache/
+models/
+*.bin
+*.safetensors
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets — NEVER commit passwords or keys
+*.env
+.env
+secrets.json

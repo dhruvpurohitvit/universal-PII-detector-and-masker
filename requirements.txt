@@ -1,0 +1,8 @@
+pandas>=1.5
+torch
+gliner
+presidio-analyzer
+spacy
+cryptography
+streamlit>=1.32
+plotly
