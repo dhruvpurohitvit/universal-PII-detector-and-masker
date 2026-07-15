@@ -7,6 +7,7 @@
 [![AES-256-GCM](https://img.shields.io/badge/Encryption-AES--256--GCM-critical)](pii_detector/masking/aes_masker.py)
 [![GLiNER](https://img.shields.io/badge/NLP-GLiNER-purple)](https://github.com/urchade/GLiNER)
 [![Presidio](https://img.shields.io/badge/NLP-Presidio-blue)](https://microsoft.github.io/presidio/)
+dockerized : https://hub.docker.com/r/dhruvpurohitx/universal-pii-detector
 
 ---
 
